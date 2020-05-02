@@ -12,7 +12,7 @@ Find all files in a source directory and all it's subdirectories and copy them t
 ### Usage
 `node gather.js <origin directory path> <destination directory path>`
 
-## gather
+## compare
 Compare the files, by file name, between a source and comparison directory (and all their respective subdirectories), then list files that exist in the souce but not the comparison directory.
 ### Usage
 `node compare.js <source directory path> <comparison directory path>`
