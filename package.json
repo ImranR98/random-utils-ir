@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "fs": "0.0.1-security",
-    "jimp": "^0.10.3"
+    "jimp": "^0.14.0"
   }
 }
