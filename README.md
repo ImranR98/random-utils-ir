@@ -8,7 +8,7 @@ Convert Google Keep Notes (from Google Takeout) into MarkDown format. Images are
 `node keepToMD.js <path to Google Keep Takeout directory> <path to empty destination directory for MD files>`
 
 ## combineKeepToMD
-Combine the output of the above KeepToMD tool into one file.
+Combine the output of the above KeepToMD tool into one file. Any files that don't match the keepToMD format will not be combined, and the paths are printed to screen.
 ### Usage
 Change the `filesDir` and `destinationPath` variables to whatever values you need, then run:
 `node combineKeepToMD.js`

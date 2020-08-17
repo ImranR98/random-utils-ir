@@ -48,7 +48,10 @@ files = files.map(file => {
 })
 
 // Filter out non Google Keep exports
-files = files.filter(file => file.date != null)
+files = files.filter(file => {
+    if (file.date == null) console.log(file.path)
+    return file.date != null
+})
 
 // Sort files based on date
 files = files.sort((a, b) => b.date - a.date)
