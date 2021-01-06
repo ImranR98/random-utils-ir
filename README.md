@@ -18,6 +18,11 @@ Find all files in a source directory and all it's subdirectories and copy them t
 ### Usage
 `node gather.js <origin directory path> <destination directory path>`
 
+## findByType
+Find all files ending with a specific extension (or one of a specific set of extensions) in a specific directory and its subdirectories.
+### Usage
+`node findByType.js <directory> <extension 1> <extension 2> ...`
+
 ## compare
 Compare the files, by file name, between a source and comparison directory (and all their respective subdirectories), then list files that exist in the souce but not the comparison directory.
 ### Usage
