@@ -14,7 +14,7 @@ const processAllFiles = (path, func) => {
 const printFileIfType = (filePath, extensions) => {
     let print = false
     for (let i = 0; i < extensions.length; i++) {
-        if (filePath.endsWith(`.${extensions[i]}`)) print = true
+        if (filePath.endsWith(`.${extensions[i].toLowerCase()}`)) print = true
     }
     if (print) console.log(filePath)
 }
