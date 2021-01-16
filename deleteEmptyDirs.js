@@ -8,7 +8,7 @@ const getEmptyDirs = (path) => {
         filePath = path + '/' + fileName
         if (fs.statSync(filePath).isDirectory()) {
             if (fs.readdirSync(filePath).length == 0) results.push(filePath)
-            else results = results.concat(this.getEmptyDirs(filePath))
+            else results = results.concat(getEmptyDirs(filePath))
         }
     })
     return results
@@ -18,7 +18,10 @@ const getEmptyDirs = (path) => {
 const recursivelyDeleteEmptyDirs = (path) => {
     let emptyDirs = getEmptyDirs(path)
     while (emptyDirs.length > 0) {
-        emptyDirs.forEach(dir => fs.rmdirSync(dir))
+        emptyDirs.forEach(dir => {
+            console.log(`Deleting ${dir}`)
+            fs.rmdirSync(dir)
+        })
         emptyDirs = getEmptyDirs(path)
     }
 }
