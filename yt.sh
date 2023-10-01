@@ -9,7 +9,7 @@ if [ -z "$playlistid" ]; then
     echo 'Playlist ID not provided' >&2
     exit 1
 fi
-yt-dlp https://www.youtube.com/playlist?list="$playlistid" --restrict-filenames --embed-subs --embed-thumbnail --embed-metadata -f "bv*[ext=mp4][height<=720]+ba[ext=m4a] / b[ext=mp4][height<=720] / bv*+ba / b" --output "~/Downloads/%(playlist)s/%(playlist_index)03d - %(title)s.%(ext)s" --cookies-from-browser chromium+gnomekeyring
+yt-dlp https://www.youtube.com/playlist?list="$playlistid" --restrict-filenames --embed-subs --embed-thumbnail --embed-metadata -f "bv*[ext=mp4][height<=720]+ba[ext=m4a] / b[ext=mp4][height<=720] / bv*+ba / b" --output "~/Downloads/%(playlist)s/%(playlist_index)03d - %(title)s.%(ext)s" --cookies-from-browser chromium+gnomekeyring || :
 latest_folder=$(ls -t ~/Downloads | head -n 1)
 echo "Please confirm that the playlist is in ~/Downloads/"$latest_folder" by pressing enter (if this is wrong, enter the correct folder name):"
 read val
