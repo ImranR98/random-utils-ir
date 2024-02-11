@@ -1,6 +1,9 @@
 #!/bin/bash
 # Use ffmpeg to compress all videos in a directory and resize them to 720p
 
+# Example recursive usage w/ recursiveDirCommand.sh:
+# ./recursiveDirCommand.sh ./standardizeVideo.sh ~/Downloads/A ~/Downloads/B 1
+
 # Check if the input and output directories are provided as arguments
 if [ $# -lt 2 ]; then
     echo "Usage: $0 input_dir output_dir [--dry-run] [--include-unlikely]"
@@ -56,9 +59,11 @@ find "$INPUT_DIR" -maxdepth 1 -type f \( -iname "*.mp4" -o -iname "*.mkv" -o -in
     TEMP_OUTPUT_FILE="$OUTPUT_DIR/INCOMPLETE-${FILENAME%.*}.mp4"
     OUTPUT_FILE="$OUTPUT_DIR/${FILENAME%.*}.mp4"
 
+    PLAIN_COPY=false
+
     if [ -f "$OUTPUT_FILE" ]; then
-        echo "$OUTPUT_FILE" exists. Skipping...
-        continue
+        echo "$OUTPUT_FILE" exists. Will copy without modifying...
+        PLAIN_COPY=true
     fi
 
     SIZE="$(du "$FILE" | awk '{print $1}')"
@@ -66,8 +71,8 @@ find "$INPUT_DIR" -maxdepth 1 -type f \( -iname "*.mp4" -o -iname "*.mkv" -o -in
     LIKELY_SIZE="$(printf "%.0f" "$(echo "((1192*$LENGTH*0.85)/8)" | bc)")"
 
     if [ "$INCLUDE_UNLIKELY" != true ] && [ "$LIKELY_SIZE" -gt "$SIZE" ]; then
-        echo ""$OUTPUT_FILE" is already smaller ("$SIZE") than the output is likely to be (est. "$LIKELY_SIZE"). Skipping..."
-        continue
+        echo ""$OUTPUT_FILE" is already smaller ("$SIZE") than the output is likely to be (est. "$LIKELY_SIZE"). Will copy without modifying..."
+        PLAIN_COPY=true
     fi
 
     # Set the options for ffmpeg
@@ -86,8 +91,12 @@ find "$INPUT_DIR" -maxdepth 1 -type f \( -iname "*.mp4" -o -iname "*.mkv" -o -in
     fi
 
     # Construct ffmpeg command and append to file
-    echo "echo Launching process for "'"'$FILE'"'"\" ("$(du -h "$FILE" | awk '{print $1}')" to ~"$(echo "($LIKELY_SIZE/1024)" | bc)"M)...\"" >>"$COMMAND_FILE"
-    COMMAND="ffmpeg -hide_banner -loglevel warning -i "'"'$FILE'"'" ${RESIZE} ${OPTIONS} "'"'$TEMP_OUTPUT_FILE'"'" && mv "'"'$TEMP_OUTPUT_FILE'"'" "'"'$OUTPUT_FILE'"'" || rm "'"'$TEMP_OUTPUT_FILE'"'" &"
+    if [ "$PLAIN_COPY" == true ]; then
+        COMMAND="cp "'"'$FILE'"'" "'"'$OUTPUT_FILE'"'" &"
+    else
+        echo "echo Launching process for "'"'$FILE'"'"\" ("$(du -h "$FILE" | awk '{print $1}')" to ~"$(echo "($LIKELY_SIZE/1024)" | bc)"M)...\"" >>"$COMMAND_FILE"
+        COMMAND="ffmpeg -hide_banner -loglevel warning -i "'"'$FILE'"'" ${RESIZE} ${OPTIONS} "'"'$TEMP_OUTPUT_FILE'"'" && mv "'"'$TEMP_OUTPUT_FILE'"'" "'"'$OUTPUT_FILE'"'" || rm "'"'$TEMP_OUTPUT_FILE'"'" &"
+    fi
     echo "$COMMAND" >>"$COMMAND_FILE"
     ((CURR_PROCS++))
     if (($CURR_PROCS >= $MAX_PROCS)); then
