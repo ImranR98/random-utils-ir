@@ -1,5 +1,6 @@
 # Given a command string $1, an input dir $2 and an output dir $3...
 # Run all commands of the form '$1 "$2/X" "$3/X"' where X is a subpath of $2 (including '.' which is $2 itself) recursively for all possible subdirectories
+# If there are additional arguments given $4, $5, $6 and so on, the command will be run as '$1 $4 $5 $6 ... "$2/X" "$3/X"'
 
 # Check if the input and output directories are provided as arguments
 if [ $# -lt 3 ]; then
@@ -45,6 +46,6 @@ get_relative_path() {
 
 find "$INPUT_DIR" -type d | while read -r DIR; do
     REL_PATH=$(get_relative_path "$INPUT_DIR" "$DIR")
-    FINAL_COMMAND=""$COMMAND" '$DIR' '$OUTPUT_DIR/$REL_PATH' $@"
+    FINAL_COMMAND=""$COMMAND" $@ '$DIR' '$OUTPUT_DIR/$REL_PATH'"
     eval "$FINAL_COMMAND"
 done
