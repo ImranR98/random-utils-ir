@@ -7,7 +7,7 @@ if [ -z "$TARGET_DIR" ]; then
 fi
 TARGET_DIR="$(realpath "$TARGET_DIR")"
 TEMP_FILE="$(mktemp)"
-trap "cd ""$CURRENT_DIR""; rm "$TEMP_FILE"" EXIT
+trap "cd \"$CURRENT_DIR\"; rm \"$TEMP_FILE\"" EXIT
 
 cd "${TARGET_DIR}"
 FILES="$(ls -tr Snapchat-*.mp4)"
